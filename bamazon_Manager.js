@@ -8,14 +8,16 @@ var connection = mysql.createConnection({
     password:"root123",
     database: "bamazon"
 
-//The first should ask them the ID of the product they would like to buy.
-//The second message should ask how many units of the product they would like to buy.
+
 
 });
 connection.connect(function(err){
     if (err) throw err;
 
 })
+
+console.log("\n\r");
+
 askQuestion();
 function askQuestion(){
     inquirer
@@ -27,7 +29,9 @@ function askQuestion(){
             choices:["View Products for Sale",
             "View Low Inventory",
             "Add to Inventory",
-            "Add New Product"]
+            "Add New Product",
+            "Exit"
+        ]
 
         },
     ])
@@ -74,11 +78,19 @@ function askQuestion(){
                     type: "input",
                     message:"Price",
                     name:"price",
+                    validate: function(value){
+                        if(isNaN(value) === false){return true;}
+                        else{return false;}
+                    }
                 },
                 {
                     type: "input",
                     message:"Quantity",
                     name:"quantity",
+                    validate: function(value){
+                        if(isNaN(value) === false){return true;}
+                        else{return false;}
+                    }
                 },
             ])
             .then(function(inquirerResp){
@@ -91,8 +103,11 @@ function askQuestion(){
         
 
             
+        } else if (inquirerResp.task === "Exit"){
+            console.log(" Thank you for visiting Bamazon! ")
+            process.exit();
         }
-        // console.log(inquirerResp.id);
+    
     });
 };
 function productForSale(){
@@ -116,8 +131,7 @@ function productForSale(){
 
             console.log(table.toString());
             console.log("\n\r");
-            // console.log(res);
-            // connection.end();
+       
             askQuestion();
         });
     });
@@ -152,7 +166,7 @@ function addMoreInventory(newStockQuantity, input_id){
     connection.query(update,[newStockQuantity,input_id], function (err, result) {
         if (err) throw err;
         console.log(result.affectedRows + " record(s) updated");
-        // console.log(newStockQuantity);
+    
 
     });
     productForSale();
@@ -195,10 +209,15 @@ function customerOrder(input_id,newQuantity,newPrice){
 };
 
 function addNewProduct(prodName,deptName,price,quantity){
-    var newProd = "INSERT INTO products SET ?;
+    var newProd = "INSERT INTO products SET ?";
     //var newProd = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ('capo', 'musical instruments', '23.99','24')";
-    var post = {product_name:prodName,department_name:deptName,price:price, stock_quantity:quantity};
-    connection.query('INSERT INTO products SET ?',post, function (err, result) {
+    //var post = {product_name:prodName,department_name:deptName,price:price, stock_quantity:quantity};
+    connection.query(newProd,{
+        product_name:prodName,
+        department_name:deptName,
+        price:price,
+        stock_quantity:quantity
+    }, function (err, result) {
         if (err) throw err;
         console.log(result.insertId + " record(s) updated");
         // console.log(newStockQuantity);

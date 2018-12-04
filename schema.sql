@@ -21,4 +21,7 @@ VALUES ("LED Light", "Electronics", 4.50, 4), ("iPhone", "Mobile Phones", 399.99
 ("Guitar Picks", "Musical Instruments", 4.99, 150),("Piano", "Musical Instruments", 104.59, 30),("Electric Guitar", "Musical Instruments", 94.00, 150),
 ("Samsung Galaxy", "Mobile Phones", 178.99, 4);
 
+
+
+
 SELECT * FROM products;
